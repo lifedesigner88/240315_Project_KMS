@@ -9,8 +9,8 @@ import org.example.team_kms.common.domain.BaseEntity;
 import java.time.LocalDateTime;
 
 
-@Entity
 @Getter
+@Entity
 public class User extends BaseEntity {
 
     @Id
@@ -23,11 +23,11 @@ public class User extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
+    @Column(unique = true, nullable = false)
+    private String phoneNumber;
 
     @Column(nullable = false)
-    private String phoneNumber;
+    private String password;
 
     private String profileUrl;
 
