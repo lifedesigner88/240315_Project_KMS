@@ -36,7 +36,7 @@ public class User extends BaseEntity {
     @Setter
     private String delYn = "N";
 
-    User(){}
+    public User(){}
 
     @Builder
     public User(String name, String email, String password,

@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/encorespace
+    url: jdbc:mariadb://localhost:3306/team_kms
     username: root
     password: 1234
   jpa:
