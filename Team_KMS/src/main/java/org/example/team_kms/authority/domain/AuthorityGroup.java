@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.team_kms.common.domain.BaseEntity;
+import org.example.team_kms.document.domain.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,6 @@ public class AuthorityGroup extends BaseEntity {
 
     @Setter
     private String delYn = "N";
-
     public AuthorityGroup() {}
 
     @OneToMany(mappedBy = "superGroup", cascade = CascadeType.PERSIST)
@@ -39,6 +39,9 @@ public class AuthorityGroup extends BaseEntity {
         this.authorityGroups.clear();
         if (authorityGroups != null) this.authorityGroups.addAll(authorityGroups);
     }
+
+    @OneToMany(mappedBy = "authorityGroup", cascade = CascadeType.PERSIST)
+    private final List<Document> documents = new ArrayList<>();
 
     @Builder
     public AuthorityGroup(String gropuName, GroupType groupType, AuthorityGroup superGroup) {
