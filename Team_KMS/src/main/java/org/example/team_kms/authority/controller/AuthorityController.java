@@ -1,6 +1,5 @@
 package org.example.team_kms.authority.controller;
 
-import org.example.team_kms.authority.domain.AuthorityGroup;
 import org.example.team_kms.authority.dto.req.CreateAuthorityGroupReqDto;
 import org.example.team_kms.authority.dto.res.CreateAuthorityGroupResDto;
 import org.example.team_kms.authority.service.AuthorityService;
@@ -11,11 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("authority")
 public class AuthorityController {
 
-    private AuthorityService authorityService;
+    private final AuthorityService authorityService;
 
     @Autowired
     public AuthorityController(AuthorityService authorityService) {
@@ -26,10 +27,16 @@ public class AuthorityController {
     @PostMapping("create")
     public ResponseEntity<CreateAuthorityGroupResDto> createAuthorityGroup(
             @RequestBody CreateAuthorityGroupReqDto dto) {
-        AuthorityGroup authorityGroup = dto.makeAuthorityReqDtoToAuthorityGroup();
         return ResponseEntity.ok(
-                authorityService.createAuthorityGroup(authorityGroup, dto.getSupperGroupId())
+                authorityService.createAuthorityGroup(dto)
         );
+    }
+
+    @PostMapping("create/groups")
+    public ResponseEntity<List<CreateAuthorityGroupResDto>> createAuthorityGroups(
+            @RequestBody List<CreateAuthorityGroupReqDto> dtos){
+        return ResponseEntity.ok(
+                authorityService.createAuthorityGroups(dtos));
     }
 }
 

@@ -26,8 +26,8 @@ public class UserService {
         return new CreateUserResDto(savedUser);
     }
 
-    public List<CreateUserResDto> createUsers(List<CreateUserReqDto> dto) {
-        return dto.stream()
+    public List<CreateUserResDto> createUsers(List<CreateUserReqDto> dtos) {
+        return dtos.stream()
                 .map(CreateUserReqDto::makeUserReqDtoToUser)
                 .map(userRepo::save)
                 .map(CreateUserResDto::new)

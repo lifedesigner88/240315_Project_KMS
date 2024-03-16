@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("create/users")
-    public ResponseEntity<List<CreateUserResDto>> createUsers(@RequestBody List<CreateUserReqDto> dto){
-        return ResponseEntity.ok(userService.createUsers(dto));
+    public ResponseEntity<List<CreateUserResDto>> createUsers(@RequestBody List<CreateUserReqDto> dtos){
+        return ResponseEntity.ok(userService.createUsers(dtos));
     }
 }
