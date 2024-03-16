@@ -35,10 +35,10 @@ public class AuthorityGroup extends BaseEntity {
     public AuthorityGroup() {}
 
     @OneToMany(mappedBy = "superGroup", cascade = CascadeType.PERSIST)
-    private final List<AuthorityGroup> authorityGroups = new ArrayList<>();
+    private final List<AuthorityGroup> childGroups = new ArrayList<>();
     public void setAuthorityGroups(List<AuthorityGroup> authorityGroups) {
-        this.authorityGroups.clear();
-        if (authorityGroups != null) this.authorityGroups.addAll(authorityGroups);
+        this.childGroups.clear();
+        if (authorityGroups != null) this.childGroups.addAll(authorityGroups);
     }
 
     @OneToMany(mappedBy = "authorityGroup", cascade = CascadeType.PERSIST)

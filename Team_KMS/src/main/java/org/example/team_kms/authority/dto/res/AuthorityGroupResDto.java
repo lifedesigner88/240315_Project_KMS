@@ -4,14 +4,14 @@ import lombok.Getter;
 import org.example.team_kms.authority.domain.AuthorityGroup;
 
 @Getter
-public class CreateAuthorityGroupResDto {
+public class AuthorityGroupResDto {
 
     private final Long groupId;
     private final String groupName;
     private final String groupType;
     private final Long superGroupId;
 
-    public CreateAuthorityGroupResDto(AuthorityGroup authorityGroup){
+    public AuthorityGroupResDto(AuthorityGroup authorityGroup){
         this.groupId = authorityGroup.getId();
         this.groupName = authorityGroup.getGroupName();
         this.groupType = authorityGroup.getGroupType().name();

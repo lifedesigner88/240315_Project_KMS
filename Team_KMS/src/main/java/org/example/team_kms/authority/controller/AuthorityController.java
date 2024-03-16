@@ -1,14 +1,12 @@
 package org.example.team_kms.authority.controller;
 
 import org.example.team_kms.authority.dto.req.CreateAuthorityGroupReqDto;
-import org.example.team_kms.authority.dto.res.CreateAuthorityGroupResDto;
+import org.example.team_kms.authority.dto.res.AuthorityGroupResDto;
+import org.example.team_kms.authority.dto.res.GetAuthorityGroupHierarchyResDto;
 import org.example.team_kms.authority.service.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,8 +22,9 @@ public class AuthorityController {
     }
 
 
+    //    Create
     @PostMapping("create")
-    public ResponseEntity<CreateAuthorityGroupResDto> createAuthorityGroup(
+    public ResponseEntity<AuthorityGroupResDto> createAuthorityGroup(
             @RequestBody CreateAuthorityGroupReqDto dto) {
         return ResponseEntity.ok(
                 authorityService.createAuthorityGroup(dto)
@@ -33,10 +32,29 @@ public class AuthorityController {
     }
 
     @PostMapping("create/groups")
-    public ResponseEntity<List<CreateAuthorityGroupResDto>> createAuthorityGroups(
-            @RequestBody List<CreateAuthorityGroupReqDto> dtos){
+    public ResponseEntity<List<AuthorityGroupResDto>> createAuthorityGroups(
+            @RequestBody List<CreateAuthorityGroupReqDto> dtos) {
         return ResponseEntity.ok(
                 authorityService.createAuthorityGroups(dtos));
     }
+
+    // Read
+    @GetMapping("childgroups/{authoritiyGroupId}")
+    public ResponseEntity<List<AuthorityGroupResDto>> getAuthorityGroupChilds(
+            @PathVariable Long authoritiyGroupId) {
+        return ResponseEntity.ok(
+                authorityService.getAuthorityGroupsById(authoritiyGroupId)
+        );
+
+    }
+
+    @GetMapping("hierarchy/{authoritiyGroupId}")
+    public ResponseEntity<GetAuthorityGroupHierarchyResDto> getAuthorityGroupHierarchy(
+            @PathVariable Long authoritiyGroupId) {
+        return ResponseEntity.ok(
+                authorityService.getAuthorityGroupHierarchy(authoritiyGroupId)
+        );
+    }
+
 }
 
