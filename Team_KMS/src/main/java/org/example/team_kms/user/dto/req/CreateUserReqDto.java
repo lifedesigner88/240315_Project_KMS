@@ -6,7 +6,7 @@ import org.example.team_kms.user.domain.User;
 import java.time.LocalDateTime;
 
 @Setter
-public class UserReqDto {
+public class CreateUserReqDto {
     private String name;
     private String email;
     private String phoneNumber;
@@ -14,7 +14,7 @@ public class UserReqDto {
     private String profileUrl;
     private LocalDateTime employedDay;
 
-    public User makeUserReqDtoToUser(UserReqDto this) {
+    public User makeUserReqDtoToUser(CreateUserReqDto this) {
         return User.builder()
                 .name(this.name)
                 .email(this.email)

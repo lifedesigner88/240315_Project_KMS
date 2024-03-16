@@ -6,7 +6,7 @@ import org.example.team_kms.user.domain.User;
 import java.time.LocalDateTime;
 
 @Getter
-public class UserResDto {
+public class CreateUserResDto {
     private final String name;
     private final String email;
     private final String phoneNumber;
@@ -14,7 +14,7 @@ public class UserResDto {
     private final String profileUrl;
     private final LocalDateTime employedDay;
 
-    public UserResDto(User user){
+    public CreateUserResDto(User user){
         this.name = user.getName();
         this.email = user.getEmail();
         this.phoneNumber = user.getPhoneNumber();
