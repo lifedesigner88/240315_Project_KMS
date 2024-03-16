@@ -5,6 +5,7 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/Team_KMS" />
+        <option name="gradleJvm" value="graalvm-jdk-17" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/Team_KMS" />
