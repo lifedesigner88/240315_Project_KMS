@@ -25,6 +25,7 @@ public class AuthorityGroup extends BaseEntity {
     @Column(nullable = false)
     private GroupType groupType;
 
+    @Setter
     @ManyToOne
     @JoinColumn
     private AuthorityGroup superGroup;
@@ -44,9 +45,8 @@ public class AuthorityGroup extends BaseEntity {
     private final List<Document> documents = new ArrayList<>();
 
     @Builder
-    public AuthorityGroup(String gropuName, GroupType groupType, AuthorityGroup superGroup) {
-        this.groupName = gropuName;
+    public AuthorityGroup(String groupName, GroupType groupType) {
+        this.groupName = groupName;
         this.groupType = groupType;
-        this.superGroup = superGroup;
     }
 }
