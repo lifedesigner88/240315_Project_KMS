@@ -3,6 +3,7 @@ package org.example.team_kms.authority.service;
 import jakarta.persistence.EntityNotFoundException;
 import org.example.team_kms.authority.domain.AuthorityGroup;
 import org.example.team_kms.authority.domain.AuthorityGroupUser;
+import org.example.team_kms.authority.domain.UserIdAndGroupRole;
 import org.example.team_kms.authority.dto.req.CreateAuthorityGroupReqDto;
 import org.example.team_kms.authority.dto.req.addUsersToGroupReqDto;
 import org.example.team_kms.authority.dto.res.AuthorityGroupResDto;
@@ -40,17 +41,20 @@ public class AuthorityService {
         AuthorityGroup newAuthorityGroup = createNewAuthorityGroup(dto);
         return new AuthorityGroupResDto(authorityGroupRepo.save(newAuthorityGroup));
     }
+
     public List<AuthorityGroupResDto> createAuthorityGroups(List<CreateAuthorityGroupReqDto> dtos) {
         return dtos.stream()
                 .map(this::createAuthorityGroup)
                 .collect(Collectors.toList());
     }
+
     public List<GroupUsersRoleResDto> addUsersToGroup(addUsersToGroupReqDto dto) {
         List<AuthorityGroupUser> addedUsers = getAuthorityGroupUsers(dto);
         return addedUsers.stream()
                 .map(GroupUsersRoleResDto::new)
                 .collect(Collectors.toList());
     }
+
     public List<List<GroupUsersRoleResDto>> addUsersToGroupList(List<addUsersToGroupReqDto> dtos) {
         List<List<GroupUsersRoleResDto>> addResult = new ArrayList<>();
         for (addUsersToGroupReqDto dto : dtos)
@@ -58,19 +62,22 @@ public class AuthorityService {
         return addResult;
     }
 
+
     //    Read
     public GetAuthorityGroupHierarchyResDto getAuthorityGroupHierarchy(Long authorityGroupId) {
         return new GetAuthorityGroupHierarchyResDto(getAuthorityGroupById(authorityGroupId));
     }
+
+    public List<GroupUsersRoleResDto> getAuthorityGroupUsers(Long authorityGroupId) {
+        AuthorityGroup authorityGroup = getAuthorityGroupById(authorityGroupId);
+        return getByAuthorityGroup(authorityGroup).stream()
+                .map(GroupUsersRoleResDto::new)
+                .collect(Collectors.toList());
+    }
+
     public List<AuthorityGroupResDto> getAuthorityGroupsById(Long authorityGroupId) {
         return getAuthorityGroupById(authorityGroupId).getChildGroups().stream()
                 .map(AuthorityGroupResDto::new)
-                .collect(Collectors.toList());
-    }
-    public List<GroupUsersRoleResDto> getAuthorityGroupUsers(Long authorityGroupId) {
-        AuthorityGroup authorityGroup = getAuthorityGroupById(authorityGroupId);
-        return authorityGroupUserRepo.findByAuthorityGroup(authorityGroup).stream()
-                .map(GroupUsersRoleResDto::new)
                 .collect(Collectors.toList());
     }
 
@@ -78,7 +85,9 @@ public class AuthorityService {
     public AuthorityGroup getAuthorityGroupById(Long supperGroupId) {
         return authorityGroupRepo.findById(supperGroupId).orElseThrow(EntityNotFoundException::new);
     }
-    private AuthorityGroup createNewAuthorityGroup(CreateAuthorityGroupReqDto dto) {
+
+
+    public AuthorityGroup createNewAuthorityGroup(CreateAuthorityGroupReqDto dto) {
         AuthorityGroup newAuthorityGroup = dto.makeAuthorityReqDtoToAuthorityGroup();
 
         Optional.ofNullable(dto.getSupperGroupId())
@@ -87,10 +96,11 @@ public class AuthorityService {
 
         return newAuthorityGroup;
     }
-    private List<AuthorityGroupUser> getAuthorityGroupUsers(addUsersToGroupReqDto dto) {
+
+    public List<AuthorityGroupUser> getAuthorityGroupUsers(addUsersToGroupReqDto dto) {
         List<AuthorityGroupUser> addedUsers = new ArrayList<>();
         AuthorityGroup authorityGroup = getAuthorityGroupById(dto.getGroupId());
-        for (addUsersToGroupReqDto.UserEmailListAndGroupRole user : dto.getGroupUsers()) {
+        for (UserIdAndGroupRole user : dto.getGroupUsers()) {
             User tempUser = userService.getUserById(user.getUserId());
             AuthorityGroupUser newAuthorityGroupUser = AuthorityGroupUser.builder()
                     .authorityGroup(authorityGroup)
@@ -100,6 +110,39 @@ public class AuthorityService {
             addedUsers.add(authorityGroupUserRepo.save(newAuthorityGroupUser));
         }
         return addedUsers;
+    }
+
+    public List<AuthorityGroupUser> getByAuthorityGroup(AuthorityGroup authorityGroup) {
+        return authorityGroupUserRepo.findByAuthorityGroup(authorityGroup);
+    }
+
+
+    public List<UserIdAndGroupRole> getAccessibleUsers(Long authorityGroupId) {
+        List<UserIdAndGroupRole> accessibleUsers = new ArrayList<>();
+        List<Long> authorityGroupIdList = new ArrayList<>();
+
+        AuthorityGroup authorityGroup = getAuthorityGroupById(authorityGroupId);
+
+        do {
+            authorityGroupIdList.add(authorityGroup.getId());
+            authorityGroup = authorityGroup.getSuperGroup();
+        } while (authorityGroup.getSuperGroup() != null);
+        authorityGroupIdList.add(authorityGroup.getId());
+
+        for(Long superGroupId : authorityGroupIdList)
+            System.out.println("상위 그룹 아이디" + superGroupId);
+
+        for(Long superGroupId : authorityGroupIdList) {
+            AuthorityGroup superGroup = getAuthorityGroupById(superGroupId);
+            List<AuthorityGroupUser> superGroupUsers = getByAuthorityGroup(superGroup);
+            for (AuthorityGroupUser authorityGroupUser : superGroupUsers) {
+                UserIdAndGroupRole userIdAndGroupRole = new UserIdAndGroupRole();
+                userIdAndGroupRole.setUserId(authorityGroupUser.getUser().getId());
+                userIdAndGroupRole.setGroupRole(authorityGroupUser.getGroupRole().name());
+                accessibleUsers.add(userIdAndGroupRole);
+            }
+        }
+        return accessibleUsers;
     }
 
 }
