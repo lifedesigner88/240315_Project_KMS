@@ -8,6 +8,7 @@ import org.example.team_kms.authority.domain.AuthorityGroup;
 import org.example.team_kms.common.domain.BaseEntity;
 
 @Getter
+@Setter
 @Entity
 public class Document extends BaseEntity {
 
@@ -35,19 +36,13 @@ public class Document extends BaseEntity {
     @JoinColumn(nullable = false)
     private AuthorityGroup authorityGroup;
 
-    @Setter
     private String delYn = "N";
     public Document () {}
 
     @Builder
-    public Document(String title, KmsDocType kmsDocType,
-                    Boolean isPublish, Document upLink,
-                    Document downLink, AuthorityGroup authorityGroup) {
+    public Document(String title, KmsDocType kmsDocType, Boolean isPublish) {
         this.title = title;
         this.kmsDocType = kmsDocType;
         this.isPublish = isPublish;
-        this.upLink = upLink;
-        this.downLink = downLink;
-        this.authorityGroup = authorityGroup;
     }
 }
