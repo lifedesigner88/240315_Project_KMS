@@ -1,8 +1,10 @@
 package org.example.team_kms.authority.controller;
 
 import org.example.team_kms.authority.dto.req.CreateAuthorityGroupReqDto;
+import org.example.team_kms.authority.dto.req.addUsersToGroupReqDto;
 import org.example.team_kms.authority.dto.res.AuthorityGroupResDto;
 import org.example.team_kms.authority.dto.res.GetAuthorityGroupHierarchyResDto;
+import org.example.team_kms.authority.dto.res.GroupUsersRoleResDto;
 import org.example.team_kms.authority.service.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,7 @@ public class AuthorityController {
     }
 
 
-    //    Create
+    // Create
     @PostMapping("create")
     public ResponseEntity<AuthorityGroupResDto> createAuthorityGroup(
             @RequestBody CreateAuthorityGroupReqDto dto) {
@@ -38,21 +40,44 @@ public class AuthorityController {
                 authorityService.createAuthorityGroups(dtos));
     }
 
-    // Read
-    @GetMapping("childgroups/{authoritiyGroupId}")
-    public ResponseEntity<List<AuthorityGroupResDto>> getAuthorityGroupChilds(
-            @PathVariable Long authoritiyGroupId) {
+    @PostMapping("addusers")
+    public ResponseEntity<List<GroupUsersRoleResDto>> addUsersToGroup(
+            @RequestBody addUsersToGroupReqDto dto){
         return ResponseEntity.ok(
-                authorityService.getAuthorityGroupsById(authoritiyGroupId)
+                authorityService.addUsersToGroup(dto)
         );
-
     }
 
-    @GetMapping("hierarchy/{authoritiyGroupId}")
-    public ResponseEntity<GetAuthorityGroupHierarchyResDto> getAuthorityGroupHierarchy(
-            @PathVariable Long authoritiyGroupId) {
+    @PostMapping("addusers/groups")
+    public ResponseEntity<List<List<GroupUsersRoleResDto>>> addUsersToGroup(
+            @RequestBody List<addUsersToGroupReqDto> dtos){
         return ResponseEntity.ok(
-                authorityService.getAuthorityGroupHierarchy(authoritiyGroupId)
+                authorityService.addUsersToGroupList(dtos)
+        );
+    }
+
+    // Read
+    @GetMapping("childgroups/{authorityGroupId}")
+    public ResponseEntity<List<AuthorityGroupResDto>> getAuthorityGroupChilds(
+            @PathVariable Long authorityGroupId) {
+        return ResponseEntity.ok(
+                authorityService.getAuthorityGroupsById(authorityGroupId)
+        );
+    }
+
+    @GetMapping("hierarchy/{authorityGroupId}")
+    public ResponseEntity<GetAuthorityGroupHierarchyResDto> getAuthorityGroupHierarchy(
+            @PathVariable Long authorityGroupId) {
+        return ResponseEntity.ok(
+                authorityService.getAuthorityGroupHierarchy(authorityGroupId)
+        );
+    }
+
+    @GetMapping("getusers/{authorityGroupId}")
+    public ResponseEntity<List<GroupUsersRoleResDto>> getAuthorityGroupUsers(
+            @PathVariable Long authorityGroupId) {
+        return ResponseEntity.ok(
+                authorityService.getAuthorityGroupUsers(authorityGroupId)
         );
     }
 

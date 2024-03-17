@@ -31,9 +31,10 @@ public class AuthorityGroupUser extends BaseEntity {
     public AuthorityGroupUser(){}
 
     @Builder
-    public AuthorityGroupUser(AuthorityGroup authorityGroup, User user, GroupRole groupRole) {
+    public AuthorityGroupUser(AuthorityGroup authorityGroup,
+                              User user, String groupRole) {
         this.authorityGroup = authorityGroup;
         this.user = user;
-        this.groupRole = groupRole;
+        this.groupRole = groupRole == null ? null : GroupRole.valueOf(groupRole);
     }
 }

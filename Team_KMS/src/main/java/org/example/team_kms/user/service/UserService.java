@@ -2,7 +2,7 @@ package org.example.team_kms.user.service;
 
 import org.example.team_kms.user.domain.User;
 import org.example.team_kms.user.dto.req.CreateUserReqDto;
-import org.example.team_kms.user.dto.res.CreateUserResDto;
+import org.example.team_kms.user.dto.res.UserResDto;
 import org.example.team_kms.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,17 +20,30 @@ public class UserService {
         this.userRepo = userRepo;
     }
 
-    public CreateUserResDto createUser(CreateUserReqDto dto) {
+//    Create
+    public UserResDto createUser(CreateUserReqDto dto) {
         User user = dto.makeUserReqDtoToUser();
         User savedUser = userRepo.save(user);
-        return new CreateUserResDto(savedUser);
+        return new UserResDto(savedUser);
     }
 
-    public List<CreateUserResDto> createUsers(List<CreateUserReqDto> dtos) {
+    public List<UserResDto> createUsers(List<CreateUserReqDto> dtos) {
         return dtos.stream()
                 .map(CreateUserReqDto::makeUserReqDtoToUser)
                 .map(userRepo::save)
-                .map(CreateUserResDto::new)
+                .map(UserResDto::new)
                 .collect(Collectors.toList());
+    }
+
+//    Read
+    public List<UserResDto> getAllUsers() {
+        List<User> users = userRepo.findAll();
+        return users.stream()
+                .map(UserResDto::new)
+                .collect(Collectors.toList());
+    }
+//    함수공통화
+    public User getUserById(Long id) {
+        return userRepo.findById(id).orElse(null);
     }
 }
